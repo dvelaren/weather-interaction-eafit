@@ -1,0 +1,3 @@
+batchisp.exe -device AT32UC3A1512 -hardware usb -operation erase f memory flash blankcheck loadbuffer wifi_dnld.elf program verify start reset 0
+
+batchisp.exe -device AT32UC3A1512 -hardware usb -operation erase f memory flash blankcheck loadbuffer wifiHD.elf program verify start reset 0
