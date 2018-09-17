@@ -11,3 +11,5 @@ Close Arduino IDE and open it again, your Weather Embedded System Code should no
 
 In order to test this project
 First upload the ArduinoCodes/ArduInterTH_masterWiFi101/ArduInterTH_masterWiFi101.ino to the Arduino MEGA, edit the code header to match your SSID, Thingworx server, thing name, service name, api key, etc and then monitor through Thingworx Platform that the values change depending on the DHT11 sensor state.
+
+Then upload the ArduinoCodes/ArduInterTH_slaveWiFi101/ArduInterTH_slaveWiFi101.ino to the Arduino MEGA, edit the code header to match your SSID, Thingworx server, thing name, service name, api key, etc. Start heating the first device (master) with your hands and check that after 30°C the Slave starts sending information. If temperature goes back to 27°C slave goes back to sleep
