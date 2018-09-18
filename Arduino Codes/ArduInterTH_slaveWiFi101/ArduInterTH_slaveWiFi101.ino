@@ -6,8 +6,8 @@
 //             Shield for Arduino. When a 'O' character is received, the slave system is disabled and stops the measurements.
 //Authors: David Velasquez (mail: dvelas25@eafit.edu.co)
 //         Raul Mazo       (mail: raul.mazo@univ-paris1.fr)
-//Version: 2.0
-//Date: 26/10/2017
+//Version: 3.0
+//Date: 17/09/2018
 
 //Required Libraries
 #include <SPI.h>
@@ -23,8 +23,9 @@
 #define ELON 1  //RED LED ON State
 
 //Pin I/O Labeling
+#define SBAT 0  //Battery sensor connected to Arduino analog pin 0
 #define DHTPIN 9  //DHT sensor connected to Arduino digital pin 2
-#define LR 2  //Red LED connected to Arduino pin 5
+#define LR 6  //Red LED connected to Arduino pin 5
 
 //Constants
 const unsigned long postingInterval = 2 * 1000; //Delay between TWX POST updates, 2000 milliseconds
@@ -35,6 +36,7 @@ const unsigned int tilt = 500;  //Constant for tilting initialized in 500 msec
 //Variables
 unsigned int state = ESLEEP;  //Variable for storing the current state of the FEM, initialized in ESLEEP state.
 unsigned int statetilt = ELOFF;  //Variable for storing the current state of the FSM of tilting
+float vbat = 0; //Variable to store current battery level voltage
 //->WiFi Shield Vars
 char ssid[] = "IoT-B19";  //Network SSID (name)
 //char ssid[] = "Bbox-221";  //Network SSID (name)
@@ -98,8 +100,11 @@ void FSMtilt() {
   }
 }
 
-void readDHT() {
+void readDHT() {  //Function that reads DHT sensor and also battery level
   if ((millis() - tiniDHT) > tDHTmeas) {
+    vbat = analogRead(SBAT) * 5.0 / 1023.0; //Acquire current battery level voltage
+    Serial.println("Battery Voltage: ");
+    Serial.println(vbat);
     T = dht.readTemperature();
     Serial.println("the temperature in the slave is: ");
     Serial.println(T);

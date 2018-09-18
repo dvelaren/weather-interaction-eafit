@@ -7,8 +7,8 @@
 //             through the XBee informing the slave system that everything is in order, which disables it.
 //Authors: David Velasquez (mail: dvelas25@eafit.edu.co)
 //         Raul Mazo       (mail: raul.mazo@univ-paris1.fr)
-//Version: 2.0
-//Date: 26/10/2017
+//Version: 3.0
+//Date: 17/09/2018
 
 //Required Libraries
 #include <SPI.h>
@@ -25,10 +25,11 @@
 #define ELON 1  //RED LED ON State
 
 //Pin I/O Labeling
-#define SBAT 0
+#define SBAT 0  //Battery sensor connected to Arduino analog pin 0
+#define COOLER 8  //Fan or cooler to normalize DHT11 connected to digital pin 8
 #define DHTPIN 9  //DHT sensor connected to Arduino digital pin 2
-#define LR 2  //Red LED connected to Arduino pin 5
-#define LG 3  //Green LED connected to Arduino pin 6
+#define LR 6  //Red LED connected to Arduino pin 6
+#define LG 3  //Green LED connected to Arduino pin 3
 
 //Constants
 const unsigned long postingInterval = 2 * 1000; //Delay between TWX POST updates, 2000 milliseconds
@@ -43,6 +44,7 @@ const unsigned int tilt = 500;  //Constant for tilting initialized in 500 msec
 //Variables
 unsigned int state = EOK;  //Variable for storing the current state of the FSM MAIN, initialized in EOK state.
 unsigned int statetilt = ELOFF;  //Variable for storing the current state of the FSM of tilting
+float vbat = 0; //Variable to store current battery level voltage
 //->WiFi Shield Vars
 char ssid[] = "IoT-B19";  //Network SSID (name)
 char pass[] = "meca2017*";  //Network password
@@ -107,8 +109,11 @@ void FSMtilt() {
   }
 }
 
-void readDHT() {
+void readDHT() {  //Function that reads DHT sensor and also battery level
   if ((millis() - tiniDHT) > tDHTmeas) {
+    vbat = analogRead(SBAT) * 5.0 / 1023.0; //Acquire current battery level voltage
+    Serial.println("Battery Voltage: ");
+    Serial.println(vbat);
     T = dht.readTemperature();
     Serial.println("temperature in the master is: ");
     Serial.println(T);
@@ -262,12 +267,13 @@ void setup() {
   //pinMode(PIN#, OUTPUT or INPUT);
   pinMode(LR, OUTPUT);  //Red LED (LR) as an OUTPUT
   pinMode(LG, OUTPUT);  //Green LED (LG) as an OUTPUT
-  pinMode(8, OUTPUT);
-  digitalWrite(8, LOW);
+  pinMode(COOLER, OUTPUT); //COOLER as an OUTPUT
+  
   //Physical output cleaning
   //digitalWrite(PIN#, LOW);
   digitalWrite(LR, LOW);
   digitalWrite(LG, LOW);
+  digitalWrite(COOLER, LOW);  //Turn off cooler
 
   //Communications initialization
   Serial.begin(9600); //Initialize Serial communications through TX0 and RX0 (PC)
