@@ -8,6 +8,7 @@ select the Arduino AVR Boards, then pick from the Select version list box the 1.
 Close Arduino IDE and open it again, your Weather Embedded System Code should now work.
 
 ## Testing
+First copy all the required libraries to My Documents / Arduino / libraries. If there is an existing DHT library, erase it and copy the one in this repository.
 
 In order to test this project
 First upload the ArduinoCodes/ArduInterTH_masterWiFi101/ArduInterTH_masterWiFi101.ino to the Arduino MEGA, edit the code header to match your SSID, Thingworx server, thing name, service name, api key, etc and then monitor through Thingworx Platform that the values change depending on the DHT11 sensor state.
