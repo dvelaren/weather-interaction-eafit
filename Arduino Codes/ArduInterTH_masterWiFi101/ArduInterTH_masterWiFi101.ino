@@ -35,7 +35,7 @@
 const unsigned long postingInterval = 2 * 1000; //Delay between TWX POST updates, 2000 milliseconds
 const unsigned int sensorCount = 2; //Number of sensor vars sent to TWX, 2 vars
 const float Tmax = 30;  //Maximum Temperature for going into Warning State (30°C)
-const float Tnor = 27;  //Temperature in order to return the system to Normal State (27°C)
+const float Tnor = 28;  //Temperature in order to return the system to Normal State (28°C)
 const unsigned long tDHTmeas = 200; //Time to measure DHT11 (200 ms)
 const unsigned long tTX = 1000; //Time to send the command through XBee (1 sec)
 const unsigned int CTX = 3; //Constant for # of times to send the same command through the XBee in order to alert (3)
@@ -297,6 +297,7 @@ void loop() {
       //Physical outputs state
       digitalWrite(LG, HIGH); //Turn green led ON because everything is OK
       digitalWrite(LR, LOW);  //Turn off red led at the OK state
+      digitalWrite(COOLER, LOW); //Turn OFF Cooler
 
       //Variables state
       readDHT();  //Measure DHT11 vars (Temperature and Humidity)
@@ -315,6 +316,7 @@ void loop() {
     case EWAR:  //Warning State
       //Physical outputs state
       digitalWrite(LG, LOW); //Turn green led OFF because there is an overtemperature warning
+      digitalWrite(COOLER, HIGH); //Turn ON Cooler to normalize situation
       //Variables state
       FSMtilt();  //Execute tilt Finite State Machine
       readDHT();  //Measure DHT11 vars (Temperature and Humidity)
@@ -335,7 +337,8 @@ void loop() {
     case EWARTX:  //Warning Transmit State
       //Physical outputs state
       digitalWrite(LG, LOW); //Turn green led OFF because there is an overtemperature warning
-
+      digitalWrite(COOLER, HIGH); //Turn ON Cooler to normalize situation
+      
       //Variables state
       FSMtilt();  //Execute tilt Finite State Machine
       readDHT();  //Measure DHT11 vars (Temperature and Humidity)
